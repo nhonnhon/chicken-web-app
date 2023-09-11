@@ -1,0 +1,42 @@
+# Set the version of docker compose to use
+version: '3.9'
+
+# The containers that compose the project
+services:
+  app:
+    container_name: chicken
+    build:
+      context: .
+      args:
+        ENVIRONMENT_NAME: ${ENVIRONMENT_NAME}
+        HTTP_PORT: ${HTTP_PORT}
+        DB_HOST: ${DB_HOST}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
+        DB_DATABASE: ${DB_DATABASE}
+        JWT_SECRET: ${JWT_SECRET}
+        JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+        ENABLE_DOCUMENTATION: ${ENABLE_DOCUMENTATION}
+    restart: always
+    ports:
+      - 3000:3000
+
+  db:
+    image: postgres:14.7
+    restart: always
+    container_name: postgres
+    ports:
+      - '${DB_PORT}:5432'
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: 'GMT'
+      PGTZ: 'GMT'
+    volumes:
+      - chicken-db-data:/data/postgres
+    env_file:
+      - .env
+
+volumes:
+  chicken-db-data:
