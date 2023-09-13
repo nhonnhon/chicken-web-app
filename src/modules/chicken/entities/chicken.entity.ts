@@ -5,14 +5,14 @@ import { Column, Entity } from 'typeorm';
 @Entity({
   name: 'chicken',
 })
-export class UserEntity extends AbstractEntity {
+export class ChickenEntity extends AbstractEntity {
   @Column({ unique: true, type: 'varchar', length: 100 })
   name: string;
 
   @Column({ nullable: true, type: 'varchar', length: 500 })
   description?: string;
 
-  @Column({ nullable: true, type: 'integer', length: 500 })
+  @Column({ nullable: true, type: 'integer' })
   price?: string;
 
   @Column({
