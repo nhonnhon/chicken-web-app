@@ -4,11 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './modules/auth/auth.module';
+import appConfig from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig],
+      load: [databaseConfig, appConfig],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
@@ -25,13 +27,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           password: password,
           database: name,
           logging,
-          entities: [],
-          // entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
-          // migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
+          entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
+          migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
           synchronize: true,
         };
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
