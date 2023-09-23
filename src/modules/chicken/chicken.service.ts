@@ -10,6 +10,10 @@ import {
   AuditLogTableEnum,
 } from '@/common/constants/audit-log.enum';
 import { ChickenUpdatePayloadDto } from './dtos/chicken-update-payload.dto';
+import { auditLogConvert } from './utils/audit-log-convert';
+import { GetChickenPaginationDto } from './dtos/chicken-get-query.dto';
+import { IResponsePaging } from '@/common/interfaces/response.interface';
+import { OrderEnum } from '@/common/constants/order.constant';
 
 export class ChickenService {
   private readonly logger = new Logger();
@@ -60,8 +64,14 @@ export class ChickenService {
     return chickenDataResponse;
   }
 
-  async update(entity: ChickenUpdatePayloadDto): Promise<ChickenEntity> {
-    return await this.chickenRepository.save(entity);
+  async update(
+    id: number,
+    entity: ChickenUpdatePayloadDto,
+  ): Promise<ChickenEntity> {
+    return await this.chickenRepository.save({
+      id,
+      ...entity,
+    });
   }
 
   private validateBeforeAction(chicken: ChickenEntity, userId: number) {
@@ -78,37 +88,44 @@ export class ChickenService {
     id: number,
     userId: number,
     dataUpdate: ChickenUpdatePayloadDto,
-  ): Promise<string> {
+  ): Promise<{ message: string }> {
     this.logger.log(`[CHICKEN SERVICE] update chicken id: ${id}`);
     const chicken = await this.findOneById(id);
 
     this.validateBeforeAction(chicken, userId);
 
-    await this.update({
+    await this.update(id, {
       ...chicken,
       ...dataUpdate,
       updated_by: userId,
     });
+
+    const auditLogData = auditLogConvert(chicken, dataUpdate);
 
     await this.auditLogService.create({
       tableName: AuditLogTableEnum.CHICKEN,
       userId: userId,
       recordId: id,
       action: AuditLogActionEnum.UPDATE,
-      oldValue: { ...chicken },
-      newValue: { ...dataUpdate },
+      oldValue: auditLogData.oldObject,
+      newValue: auditLogData.newObject,
     });
 
-    return `Update id: ${id} success`;
+    return {
+      message: `Update id: ${id} success`,
+    };
   }
 
-  async deleteChicken(id: number, userId: number): Promise<string> {
+  async deleteChicken(
+    id: number,
+    userId: number,
+  ): Promise<{ message: string }> {
     this.logger.log(`[CHICKEN SERVICE] delete chicken id: ${id}`);
     const chicken = await this.findOneById(id);
 
     this.validateBeforeAction(chicken, userId);
 
-    await this.update({
+    await this.update(id, {
       ...chicken,
       status: StatusEnum.DELETED,
       updated_by: userId,
@@ -127,6 +144,34 @@ export class ChickenService {
       },
     });
 
-    return `Delete id: ${id} success`;
+    return {
+      message: `Delete id: ${id} success`,
+    };
+  }
+
+  async findAll(
+    queryDto: GetChickenPaginationDto,
+  ): Promise<IResponsePaging<ChickenEntity>> {
+    const { skip, perPage, status } = queryDto;
+
+    const queryBuilder = this.chickenRepository.createQueryBuilder('chicken');
+    queryBuilder.orderBy('chicken.created_at', OrderEnum.ASC);
+
+    if (status) {
+      queryBuilder.where('chicken.status = :status', {
+        status,
+      });
+    }
+
+    queryBuilder.skip(skip).take(perPage);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    return {
+      data: entities,
+      itemCount,
+      paginationDto: queryDto,
+    };
   }
 }

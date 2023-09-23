@@ -7,13 +7,6 @@ import { Type } from 'class-transformer';
 export class ChickenUpdatePayloadDto extends PartialType(
   ChickenCreatePayloadDto,
 ) {
-  @ApiProperty({
-    description: 'Chicken id',
-  })
-  @IsNumber()
-  @IsInt()
-  id: number;
-
   @ApiPropertyOptional({
     type: 'string',
     description: 'Chicken status',
@@ -22,10 +15,11 @@ export class ChickenUpdatePayloadDto extends PartialType(
   @Type(() => String)
   readonly status?: StatusEnum;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Updated by',
   })
+  @IsOptional()
   @IsNumber()
   @IsInt()
-  updated_by: number;
+  updated_by?: number;
 }
