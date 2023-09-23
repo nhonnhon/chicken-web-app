@@ -29,7 +29,7 @@ export abstract class AbstractEntity extends BaseEntity {
     name: 'updated_at',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({
     type: 'integer',

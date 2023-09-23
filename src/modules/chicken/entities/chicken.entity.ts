@@ -1,5 +1,5 @@
-import { StatusEnum } from 'src/common/constants/status.enum';
-import { AbstractEntity } from 'src/common/entities';
+import { StatusEnum } from '@/common/constants/status.enum';
+import { AbstractEntity } from '@/common/entities';
 import { Column, Entity } from 'typeorm';
 
 @Entity({
@@ -13,7 +13,7 @@ export class ChickenEntity extends AbstractEntity {
   description?: string;
 
   @Column({ nullable: true, type: 'integer' })
-  price?: string;
+  price?: number;
 
   @Column({
     type: 'enum',

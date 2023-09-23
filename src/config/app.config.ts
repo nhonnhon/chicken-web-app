@@ -1,5 +1,5 @@
+import { ENUM_NODE_ENV } from '@/common/constants/env.enum';
 import { registerAs } from '@nestjs/config';
-import { ENUM_NODE_ENV } from 'src/common/constants/env.enum';
 
 export default registerAs(
   'app',

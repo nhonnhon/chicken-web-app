@@ -1,6 +1,6 @@
+import { StatusEnum } from '@/common/constants/status.enum';
+import { AbstractEntity } from '@/common/entities';
 import { Exclude } from 'class-transformer';
-import { StatusEnum } from 'src/common/constants/status.enum';
-import { AbstractEntity } from 'src/common/entities';
 import { Column, Entity } from 'typeorm';
 
 @Entity({

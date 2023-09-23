@@ -11,6 +11,20 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "*": [
+        "node_modules/*"
+      ],
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "tsconfig-paths/register": [
+        "node_modules/tsconfig-paths/register.js"
+      ]
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateAdminUser1694623007232 implements MigrationInterface {

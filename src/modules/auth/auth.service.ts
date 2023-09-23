@@ -3,7 +3,7 @@ import { UsersService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as md5 from 'md5';
 import { LoginResponseDto } from './dto/login-response.dto';
-import { StatusEnum } from 'src/common/constants/status.enum';
+import { StatusEnum } from '@/common/constants/status.enum';
 
 @Injectable()
 export class AuthService {
