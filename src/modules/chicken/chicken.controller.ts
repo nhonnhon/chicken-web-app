@@ -18,6 +18,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ChickenEntity } from './entities/chicken.entity';
 import { ChickenUpdatePayloadDto } from './dtos/chicken-update-payload.dto';
 import { GetChickenPaginationDto } from './dtos/chicken-get-query.dto';
+import { Public } from '@/common/decorators/public-route.decorator';
 
 @ApiTags('Chicken')
 @Controller('chicken')
@@ -64,6 +65,7 @@ export class ChickenController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({
     summary: 'Get all chickens',
     description: 'Get all chickens',
@@ -74,5 +76,16 @@ export class ChickenController {
     queryDto: GetChickenPaginationDto,
   ) {
     return this.chickenService.findAll(queryDto);
+  }
+
+  @Get(':id')
+  @Public()
+  @ApiOperation({
+    summary: 'Get a chicken',
+    description: 'Get a chicken',
+  })
+  @HttpCode(HttpStatus.OK)
+  async findAChicken(@Param('id') id: number) {
+    return this.chickenService.findOneById(id);
   }
 }
