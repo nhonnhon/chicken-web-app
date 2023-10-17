@@ -155,7 +155,7 @@ export class ChickenService {
     const { skip, perPage, status } = queryDto;
 
     const queryBuilder = this.chickenRepository.createQueryBuilder('chicken');
-    queryBuilder.orderBy('chicken.created_at', OrderEnum.ASC);
+    queryBuilder.orderBy('chicken.created_at', OrderEnum.DESC);
 
     if (status) {
       queryBuilder.where('chicken.status = :status', {
