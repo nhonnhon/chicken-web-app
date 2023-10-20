@@ -152,10 +152,10 @@ export class ChickenService {
   async findAll(
     queryDto: GetChickenPaginationDto,
   ): Promise<IResponsePaging<ChickenEntity>> {
-    const { skip, perPage, status } = queryDto;
+    const { skip, perPage, status = StatusEnum.ACTIVE } = queryDto;
 
     const queryBuilder = this.chickenRepository.createQueryBuilder('chicken');
-    queryBuilder.orderBy('chicken.created_at', OrderEnum.DESC);
+    queryBuilder.orderBy('chicken.updated_at', OrderEnum.DESC);
 
     if (status) {
       queryBuilder.where('chicken.status = :status', {

@@ -31,6 +31,19 @@ export const auditLogConvert = (
     newObject.ytb_link = dataUpdate.ytb_link;
   }
 
+  if (
+    dataUpdate.tiktok_link &&
+    originData.tiktok_link !== dataUpdate.tiktok_link
+  ) {
+    oldObject.tiktok_link = originData.tiktok_link;
+    newObject.tiktok_link = dataUpdate.tiktok_link;
+  }
+
+  if (dataUpdate.status && originData.status !== dataUpdate.status) {
+    oldObject.status = originData.status;
+    newObject.status = dataUpdate.status;
+  }
+
   return {
     oldObject,
     newObject,
