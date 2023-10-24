@@ -1,13 +1,20 @@
+# Base image
 FROM node:18
 
-WORKDIR /app
+# Create app directory
+WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 
-RUN yarn --frozen-lockfile
+# Install app dependencies
+RUN yarn
 
+# Bundle app source
 COPY . .
 
+# Creates a "dist" folder with the production build
 RUN yarn build
 
-CMD [ "yarn", "start:dev" ]
+# Start the server using the production build
+CMD [ "node", "dist/main.js" ]
