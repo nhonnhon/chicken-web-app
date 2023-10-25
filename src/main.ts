@@ -1,17 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
-  const configService = app.get(ConfigService);
-
-  const {
-    http: { port },
-  } = configService.get('app');
   const logger = new Logger();
 
   app.useGlobalPipes(
@@ -29,11 +23,13 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(port, '0.0.0.0');
+  await app.listen(process.env.PORT || 3000, '0.0.0.0');
+  logger.log(`==========================================================`);
+  logger.log(`PORT: ${process.env.PORT}`);
   logger.log(`==========================================================`);
   logger.log(`Http Server running on ${await app.getUrl()}`, 'NestApplication');
   logger.log(`==========================================================`);
-  logger.log(`Documentation: http://localhost:${port}/documentation`);
+  logger.log(`Documentation: http://${await app.getUrl()}/documentation`);
   logger.log(`==========================================================`);
 }
 bootstrap();
